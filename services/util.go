@@ -46,24 +46,24 @@ func GetUserInput() (user models.StringConv) {
 	}
 
 	std := models.Student{
- Age: age,
+		Age:     age,
 		Name:    name,
 		School:  school,
 		Stipend: stipend,
 	}
 	adlt := models.Adult{
-		Age: age,
+		Age:    age,
 		Name:   name,
 		KraPin: kraPin,
 		Salary: salary,
 	}
-	return usersFactory(&std, &adlt)
+	return UsersFactory(&std, &adlt)
 }
 
-func usersFactory(s *models.Student, a *models.Adult) (userDetails models.StringConv) {
+func UsersFactory(s *models.Student, a *models.Adult) (userDetails models.StringConv) {
 
 	switch {
-	case len(s.School) > 0 && s.Stipend > 0 :
+	case len(s.School) > 0 && s.Stipend > 0:
 		return s
 	default:
 		return a

@@ -17,8 +17,9 @@ func main() {
 		userDetails := services.GetUserInput()
 		users = append(users, userDetails)
 	}
-	println("|No.| Name | Age | Gross Pay | Net Pay | Student | Inst")
-	println("|---|------|-----|-----------|---------|")
+	println("| No. | Name | Age | Gross Pay  | Tax | Net Pay | Student | Inst | KRA  |")
+
+	println("|-----|------|-----|------------|------|-----------|--------|------|------|")
 	for index, persons := range users {
 		fmt.Println(persons.ToString(index + 1))
 	}
