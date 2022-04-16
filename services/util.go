@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sync"
 	"tax_calculator/models"
+	"time"
 )
 
 func GetUserInput() (user models.StringConv) {
@@ -70,4 +72,21 @@ func UsersFactory(s *models.Student, a *models.Adult) (userDetails models.String
 	}
 }
 
+func EmailResults(user models.StringConv, number int, wg *sync.WaitGroup) {
+	//emailFrom := "email"
+	//emailTo := []string{"email"}
+	//psw := "pass"
+	//smtpHost := "smtp.gmail.com"
+	//smtpPort := "587"
+	fmt.Println("Sending Email for", user.ToMap()["name"])
+	time.Sleep(time.Second * 20)
+	//auth := smtp.PlainAuth("", emailFrom, psw, smtpHost)
+	//fmt.Println(auth)
+	//err := smtp.SendMail(smtpHost+":"+smtpPort, auth, emailFrom, emailTo, []byte(user.ToString(number)))
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
 
+	fmt.Println("Email Sent")
+	defer wg.Done()
+}
