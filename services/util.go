@@ -10,13 +10,15 @@ import (
 )
 
 func GetUserInput() (user models.StringConv) {
-	var name string
-	var age int
-	var student int
-	var kraPin string
-	var school string
-	var stipend int
-	var salary int
+	var (
+		name    string
+		age     int
+		student int
+		kraPin  string
+		school  string
+		stipend int
+		salary  int
+	)
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Print("Enter Your Name : ")
