@@ -2,6 +2,7 @@ package services
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"os"
 	"sync"
@@ -74,21 +75,19 @@ func UsersFactory(s *models.Student, a *models.Adult) (userDetails models.String
 	}
 }
 
-func EmailResults(user models.StringConv, number int, wg *sync.WaitGroup) {
-	//emailFrom := "email"
-	//emailTo := []string{"email"}
-	//psw := "pass"
-	//smtpHost := "smtp.gmail.com"
-	//smtpPort := "587"
-	fmt.Println("Sending Email for", user.ToMap()["name"])
-	time.Sleep(time.Second * 20)
-	//auth := smtp.PlainAuth("", emailFrom, psw, smtpHost)
-	//fmt.Println(auth)
-	//err := smtp.SendMail(smtpHost+":"+smtpPort, auth, emailFrom, emailTo, []byte(user.ToString(number)))
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
+func EmailResults(emailCC chan<- string, user context.Context, number int, wg *sync.WaitGroup) {
 
-	fmt.Println("Email Sent")
+	userDetails := user.Value("user").(models.StringConv)
+
+	fmt.Println("Sending Email for", userDetails.ToMap()["name"])
+	time.Sleep(time.Second * 10)
+
+	emailCC <- "Email Sent"
+	select {
+	case <-user.Done():
+		fmt.Println("Timed Out")
+
+	}
+
 	defer wg.Done()
 }
