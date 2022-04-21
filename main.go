@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"log"
+	"os"
+	"runtime"
 	"sync"
 	"tax_calculator/models"
 	"tax_calculator/services"
@@ -11,22 +13,23 @@ import (
 
 var wg = &sync.WaitGroup{}
 
-var emailConfirmationChannel = make(chan string)
+var emailConfirmationChannel = make(chan string, 4) // 4 threads writing to the channel
+var logger = log.New(os.Stdin, "-- main node --", log.Ldate)
 
 func main() {
 	now := time.Now()
-
 	defer close(emailConfirmationChannel)
 	defer func() {
-		fmt.Println("Thank you")
-		fmt.Println("Time Used - ", time.Since(now))
+		logger.Println("Thank you")
+		logger.Println("Latency- ", time.Since(now))
+		logger.Println(runtime.NumGoroutine(), "Threads still running")
 	}()
 
-	calcContext, cancel := context.WithTimeout(context.Background(), 35*time.Second)
+	calcContext, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	func() {
-		fmt.Print("\nTaxify...Tulipe Ushuru\n")
+		logger.Print(" Taxify...Tulipe Ushuru\n")
 	}()
 
 	users := make([]models.StringConv, 0)
@@ -41,10 +44,10 @@ func main() {
 		go func() {
 			select {
 			case response := <-emailConfirmationChannel:
-				fmt.Println("Email Response Confirmation status : ", response)
+				logger.Println("Email Response Confirmation status : ", response)
 			case <-calcContext.Done():
-				fmt.Println("Deadline Reached --- Cant receive more requests")
-				fmt.Println(calcContext.Err())
+				logger.Println("Deadline Reached --- Cant receive more requests")
+				logger.Println(calcContext.Err())
 
 			}
 			defer wg.Done()
@@ -55,7 +58,7 @@ func main() {
 
 	println("|-----|------|-----|------------|------|-----------|--------|------|------|")
 	for index, persons := range users {
-		fmt.Println(persons.ToString(index + 1))
+		logger.Println(persons.ToString(index + 1))
 	}
 
 	wg.Wait()

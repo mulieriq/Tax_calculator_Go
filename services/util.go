@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"sync"
 	"tax_calculator/models"
@@ -65,6 +66,8 @@ func GetUserInput() (user models.StringConv) {
 	return UsersFactory(&std, &adlt)
 }
 
+var logger = log.New(os.Stdin, "-- util node --", log.Ldate)
+
 func UsersFactory(s *models.Student, a *models.Adult) (userDetails models.StringConv) {
 
 	switch {
@@ -79,13 +82,13 @@ func EmailResults(emailCC chan<- string, user context.Context, number int, wg *s
 
 	userDetails := user.Value("user").(models.StringConv)
 
-	fmt.Println("Sending Email for", userDetails.ToMap()["name"])
+	logger.Println("Sending Email for", userDetails.ToMap()["name"])
 	time.Sleep(time.Second * 10)
 
 	emailCC <- "Email Sent"
 	select {
 	case <-user.Done():
-		fmt.Println("Timed Out")
+		logger.Println("Timed Out")
 
 	}
 
