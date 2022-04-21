@@ -60,6 +60,5 @@ func main() {
 	for index, persons := range users {
 		logger.Println(persons.ToString(index + 1))
 	}
-
 	wg.Wait()
 }
